@@ -1,0 +1,87 @@
+/* Sidebar styles (not using Tailwind) */
+.sidebar {
+  background: #1f2937; /* dark slate */
+  color: #fff;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 240px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.sidebar-header {
+  background: #199473; /* teal */
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+}
+
+.sidebar-title {
+  font-family: 'Dancing Script', cursive, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  font-size: 28px;
+  color: #fff;
+  margin: 0;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  color: #cbd5e1; /* light slate */
+  text-decoration: none;
+}
+
+.nav-link:visited {
+  color: #cbd5e1;
+}
+
+.nav-link .icon {
+  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-link span {
+  font-size: 16px;
+}
+
+.nav-link:hover {
+  background: #2d3748;
+  color: #fff;
+}
+
+/* Active item: full teal rounded rectangle, white text, highlighted icon */
+.nav-link.active {
+  background: #19a37b; /* teal */
+  color: #fff;
+  border-left: none;
+  border-radius: 8px;
+  padding-left: 18px;
+}
+
+.nav-link.active .icon {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  padding: 6px;
+  border-radius: 50%;
+}
+
+/* ensure non-active icons are lighter */
+.nav-link .icon {
+  color: #cbd5e1;
+}
+
