@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+import api from '../../utils/api'
 import {AttendanceHelper, columns} from '../../utils/AttendanceHelper'
 import DataTable from 'react-data-table-component'
 import { StyleSheetManager } from 'styled-components'
@@ -25,11 +25,7 @@ const Attendance = () => {
   const fetchAttendance = async () => {
           setLoading(true)
         try {
-          const response = await axios.get('http://localhost:5000/api/attendance', {
-            headers: {
-              "Authorization": `Bearer ${localStorage.getItem("token")}`
-            }
-          })
+          const response = await api.get('/api/attendance')
   
           console.log(response.data)
           if (response.data && response.data.success) {

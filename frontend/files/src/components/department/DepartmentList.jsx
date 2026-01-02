@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+import api from '../../utils/api'
 import { DepartmentButtons } from '../../utils/DepartmentHelper'
 import DataTable from 'react-data-table-component'
 import { columns } from '../../utils/DepartmentHelper'
@@ -42,11 +42,7 @@ const DepartmentList = () => {
     const fetchDepartments = async () => {
         setDepLoading(true)
       try {
-        const response = await axios.get('http://localhost:5000/api/department/list', {
-          headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
-          }
-        })
+        const response = await api.get('/api/department/list')
 
         if (response.data && response.data.success) {
           let sno = 1

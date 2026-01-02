@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import axios from 'axios'
+import api from '../../utils/api'
 
 const View = () => {
   const [salaries, setSalaries] = useState([])
@@ -11,14 +11,9 @@ const View = () => {
 
   const fetchSalaries = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:5000/api/salary/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      )
+      const response = await api.get(`/api/salary/${id}`)
+
+      
 
       if (response.data && response.data.success) {
         const data = Array.isArray(response.data.salaries) ? response.data.salaries : []

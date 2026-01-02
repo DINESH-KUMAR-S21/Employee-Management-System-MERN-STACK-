@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import axios from 'axios';
+import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/authContext';
 
@@ -38,7 +38,7 @@ const Setting = () => {
 
         try{
             const token = localStorage.getItem('token');
-            const response = await axios.post('http://localhost:5000/api/auth/change-password', {
+            const response = await api.post('/api/auth/change-password', {
                 oldPassword: setting.oldPassword,
                 newPassword: setting.newPassword
             }, {

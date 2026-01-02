@@ -17,7 +17,20 @@ dotenv.config()
 
 const app = express()
 
-app.use(cors())
+const allowedOrigins = [process.env.FRONTEND_URL || 'http://localhost:5173', 'https://employee-management-system-mern-sta-steel.vercel.app'];
+app.use(cors({
+  origin: function(origin, callback) {
+    // allow requests with no origin (like curl, Postman, or server-to-server requests)
+    if (!origin) return callback(null, true);
+    // allow specific origins from allowedOrigins OR any Vercel subdomain (useful for deploying frontend to Vercel)
+    if (allowedOrigins.indexOf(origin) !== -1 || (origin && origin.endsWith('.vercel.app'))) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS policy: Origin not allowed'));
+    }
+  },
+  credentials: true
+}))
 app.use(express.json())
 app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')))
 app.use('/api/auth', authRoutes)

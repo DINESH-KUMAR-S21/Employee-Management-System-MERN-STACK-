@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import api from '../../utils/api';
 import { useAuth } from '../../context/authContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -46,7 +46,7 @@ const LeaveList = () => {
 
       try {
         const token = localStorage.getItem('token')
-        const response = await axios.post('http://localhost:5000/api/leave/add', payload, {
+        const response = await api.post('/api/leave/add', payload, {
           headers: {
             Authorization: `Bearer ${token}`
           }

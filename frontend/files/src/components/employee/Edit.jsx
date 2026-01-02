@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios'
+import api from '../../utils/api'
 import { fetchDepartments } from '../../utils/EmployeeHelper'
 
 const Edit = () => {
@@ -42,8 +42,8 @@ const Edit = () => {
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/employee/${id}`,
+        const res = await api.get(
+          `/api/employee/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -91,8 +91,8 @@ const Edit = () => {
     })
 
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/employee/${id}`,
+      const res = await api.put(
+        `/api/employee/${id}`,
         formDataObj,
         {
           headers: {

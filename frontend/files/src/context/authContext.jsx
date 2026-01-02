@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
+import api from "../utils/api";
 
 const UserContext = createContext();
 
@@ -19,7 +19,7 @@ const AuthProvider = ({ children }) => {
         }
 
         // verify token with backend
-        const res = await axios.get('http://localhost:5000/api/auth/verify', {
+        const res = await api.get('/api/auth/verify', {
           headers: { Authorization: `Bearer ${token}` }
         });
 

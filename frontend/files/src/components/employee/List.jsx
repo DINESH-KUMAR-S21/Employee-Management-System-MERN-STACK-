@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
-import { EmployeeButtons, columns } from '../../utils/EmployeeHelper'
+import api, { uploadsUrl } from '../../utils/api'
+import { EmployeeButtons, columns } from '../../utils/EmployeeHelper' 
 import DataTable from 'react-data-table-component'
 import { StyleSheetManager } from 'styled-components'
 
@@ -22,7 +22,7 @@ const List = () => {
       const fetchEmployees = async () => {
           setEmpLoading(true)
         try {
-          const response = await axios.get('http://localhost:5000/api/employee', {
+          const response = await api.get('/api/employee', {
             headers: {
               "Authorization": `Bearer ${localStorage.getItem("token")}`
             }
@@ -38,7 +38,7 @@ const List = () => {
               name: emp.userId.name, 
               dob: new Date(emp.dob).toLocaleDateString(),
               profileImage:<img
-  src={`http://localhost:5000/uploads/${emp.userId.profileImage}`}
+  src={uploadsUrl(emp.userId.profileImage)}
   alt="profile"
   className="w-10 h-10 rounded-full object-cover"
 />

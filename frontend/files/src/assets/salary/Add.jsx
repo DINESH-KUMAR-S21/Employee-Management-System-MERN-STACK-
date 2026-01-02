@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios'
+import api from '../../utils/api'
 import { fetchDepartments, getEmployees } from '../../utils/EmployeeHelper'
 
 const Add = () => {
@@ -70,18 +70,14 @@ const Add = () => {
     e.preventDefault()
 
     // helpful debug log
-    const url = `http://localhost:5000/api/salary/add`
-    console.log('POST', url, 'payload:', salary)
+    console.log('POST /api/salary/add payload:', salary)
     // clear previous errors
     setError(null)
     setErrorDetail(null)
 
     try {
-      const res = await axios.post(url, salary, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      })
+      const res = await api.post('/api/salary/add', salary)
+
       console.log('POST /api/salary/add response:', res.status, res.data)
 
       if (res.data?.success) {

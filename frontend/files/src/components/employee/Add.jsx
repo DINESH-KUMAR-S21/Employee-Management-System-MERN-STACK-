@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { fetchDepartments } from '../../utils/EmployeeHelper'
-import axios from 'axios'
+import api from '../../utils/api' 
 
 const Add = () => {
 
@@ -58,12 +58,7 @@ const [formData, setFormData] = useState({})
             for (const pair of formDataObj.entries()) {
                 console.log('formData entry:', pair[0], pair[1]);
             }
-      const response = await axios.post('http://localhost:5000/api/employee/add', formDataObj, {
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem('token')}`,
-        
-        }
-      });
+      const response = await api.post('/api/employee/add', formDataObj)
       console.log('Server response:', response);
       if(response.data && response.data.success){
         if (typeof navigate === 'function') {

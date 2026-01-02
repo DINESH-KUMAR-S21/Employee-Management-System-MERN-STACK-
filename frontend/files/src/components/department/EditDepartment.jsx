@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import axios from 'axios'
+import api from '../../utils/api' 
 
 const EditDepartment = () => {
     const { id } = useParams();
@@ -16,7 +16,7 @@ const EditDepartment = () => {
       try {
         const token = localStorage.getItem("token")
         const headers = token ? { Authorization: `Bearer ${token}` } : {}
-        const response = await axios.get(`http://localhost:5000/api/department/${id}`, { headers })
+        const response = await api.get(`/api/department/${id}`, { headers })
         console.log('GET /api/department/:id response:', response)
 
         if (response.data && response.data.success) {
@@ -52,7 +52,7 @@ const EditDepartment = () => {
 
     try{
       console.log('Submitting department:', department);
-      const response = await axios.put(`http://localhost:5000/api/department/${id}`, department, {
+      const response = await api.put(`/api/department/${id}`, department, {
         headers: {
           "Authorization": `Bearer ${localStorage.getItem('token')}`,
           "Content-Type": "application/json"

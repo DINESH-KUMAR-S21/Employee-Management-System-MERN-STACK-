@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api, { uploadsUrl } from '../../utils/api';
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from '../../context/authContext';
@@ -28,7 +28,7 @@ const Detail = () => {
       }
 
       try {
-        const response = await axios.get(`http://localhost:5000/api/leave/detail/${id}`, {
+        const response = await api.get(`/api/leave/detail/${id}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
               }
@@ -55,7 +55,7 @@ const Detail = () => {
 
   const changeStatus = async (id, status) => {
       try {
-        const response = await axios.put(`http://localhost:5000/api/leave/${id}`, { status },
+        const response = await api.put(`/api/leave/${id}`, { status },
             {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -86,7 +86,7 @@ const Detail = () => {
 
     <div className="mb-6 flex justify-center">
       <img
-        src={leave?.employeeId?.userId?.profileImage ? `http://localhost:5000/uploads/${encodeURIComponent(leave.employeeId.userId.profileImage)}` : 'https://via.placeholder.com/150'}
+        src={leave?.employeeId?.userId?.profileImage ? uploadsUrl(leave.employeeId.userId.profileImage) : 'https://via.placeholder.com/150'}
         alt="Profile"
         className="w-32 h-32 rounded-full object-cover"
       />

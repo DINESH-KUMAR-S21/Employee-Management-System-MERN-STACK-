@@ -1,6 +1,6 @@
 import React from 'react'
 import * as Router from 'react-router-dom'
-import axios from 'axios'
+import api from '../../utils/api'
 
 const AddDepartment = () => {
 
@@ -27,12 +27,7 @@ const AddDepartment = () => {
 
     try{
       console.log('Submitting department:', department);
-      const response = await axios.post('http://localhost:5000/api/department/add', department, {
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem('token')}`,
-          "Content-Type": "application/json"
-        }
-      });
+      const response = await api.post('/api/department/add', department)
       console.log('Server response:', response);
       if(response.data && response.data.success){
         if (typeof navigate === 'function') {

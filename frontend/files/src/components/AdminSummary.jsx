@@ -13,7 +13,7 @@ import {
 } from 'react-icons/fa';
 import SummaryCard from './SummaryCard';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 const AdminSummary = () => {
 
@@ -21,11 +21,7 @@ const AdminSummary = () => {
   useEffect (() => {
     const fetchSummary = async () => {
       try{
-        const response = await axios.get('http://localhost:5000/api/dashboard/summary', {
-          headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
-          }
-        })
+        const response = await api.get('/api/dashboard/summary')
         setSummary(response.data)
       }catch(error){
        if(error.response){
