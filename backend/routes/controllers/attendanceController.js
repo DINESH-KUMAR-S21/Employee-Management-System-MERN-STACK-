@@ -42,29 +42,41 @@ const attendanceReport = async (req, res) => {
             query.date = date;
         }
 
-        const attendanceData = await Attendance.find(query).populate({
-        path: "employeeId",
-        populate: [
-            "department",
-            "userId"
-        ]
-    }).sort({date: -1}).limit(parseInt(limit)).skip(parseInt(skip)); 
+    const attendanceData = await Attendance.find(query)
+        .skip(parseInt(skip))
+        .limit(parseInt(limit))
+        .sort({date: -1})
+        .populate({
+            path: "employeeId",
+            populate: [
+                { path: "department" },
+                { path: "userId" }
+            ]
+        }); 
 
     const groupData = attendanceData.reduce((result, record) => {
-        if(!result[record.date]){
-            result[record.date] = [];
+        try {
+            if(!result[record.date]){
+                result[record.date] = [];
+            }
+            // Check if employeeId and related fields exist before accessing
+            if(record.employeeId && record.employeeId.userId && record.employeeId.department){
+                result[record.date].push({
+                    employeeId: record.employeeId.employeeId,
+                    employeeName: record.employeeId.userId.name,
+                    departmentName: record.employeeId.department.dep_name,
+                    status: record.status || "Not marked"
+                });
+            }
+        } catch(recordError) {
+            console.error("Error processing record:", record, recordError);
         }
-        result[record.date].push({
-            employeeId: record.employeeId.employeeId,
-            employeeName: record.employeeId.userId.name,
-            departmentName: record.employeeId.department.dep_name,
-            status: record.status || "Not marked"
-        });
         return result
     }, {})
-       return res.status(200).json({ success: true, groupData });
+        return res.status(200).json({ success: true, groupData });
     }catch(error){
-            res.status(500).json({ success: false, message: error.message });
+        console.error("Attendance report error:", error.message, error.stack);
+        return res.status(500).json({ success: false, message: error.message });
     }
 }
 export { getAttendance, updateAttendance, attendanceReport }
