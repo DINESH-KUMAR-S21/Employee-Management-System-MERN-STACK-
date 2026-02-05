@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { fetchDepartments, getEmployees } from '../../utils/EmployeeHelper'
+import API_BASE_URL from '../../config/api'
 
 const Add = () => {
   const navigate = useNavigate()
@@ -70,7 +71,7 @@ const Add = () => {
     e.preventDefault()
 
     // helpful debug log
-    const url = `http://localhost:5000/api/salary/add`
+    const url = `${API_BASE_URL}/api/salary/add`
     console.log('POST', url, 'payload:', salary)
     // clear previous errors
     setError(null)

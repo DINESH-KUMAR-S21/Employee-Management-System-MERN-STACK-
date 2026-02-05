@@ -14,6 +14,7 @@ import {
 import SummaryCard from './SummaryCard';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 const AdminSummary = () => {
 
@@ -21,7 +22,7 @@ const AdminSummary = () => {
   useEffect (() => {
     const fetchSummary = async () => {
       try{
-        const response = await axios.get('http://localhost:5000/api/dashboard/summary', {
+        const response = await axios.get(`${API_BASE_URL}/api/dashboard/summary`, {
           headers: {
             "Authorization": `Bearer ${localStorage.getItem("token")}`
           }

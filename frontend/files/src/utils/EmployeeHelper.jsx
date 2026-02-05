@@ -1,6 +1,7 @@
  import axios from 'axios'
  import { useNavigate } from 'react-router-dom'
  import { useEffect, useState } from 'react'
+ import API_BASE_URL from '../config/api'
 
  export const columns = [
     {
@@ -42,7 +43,7 @@
 ]
  export const fetchDepartments = async () => {
   try {
-    const response = await axios.get('http://localhost:5000/api/department/list', {
+    const response = await axios.get(`${API_BASE_URL}/api/department/list`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     });
     return (response?.data?.success && response.data.departments) ? response.data.departments : [];
@@ -56,7 +57,7 @@ export const getEmployees = async (id) => {
   if (!id) return [];
   try {
     // Prefer the descriptive endpoint
-    const response = await axios.get(`http://localhost:5000/api/employee/department/${id}`, {
+    const response = await axios.get(`${API_BASE_URL}/api/employee/department/${id}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     });
     return (response?.data?.success && response.data.employees) ? response.data.employees : [];

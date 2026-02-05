@@ -1,5 +1,6 @@
 import {useNavigate} from 'react-router-dom'
 import axios from 'axios'
+import API_BASE_URL from '../config/api'
 
 
 export const columns = [
@@ -29,7 +30,7 @@ export const DepartmentButtons = ({ _id, onDepartmentDelete }) => {
         try {
             const token = localStorage.getItem("token")
             const headers = token ? { Authorization: `Bearer ${token}` } : {}
-            const response = await axios.delete(`http://localhost:5000/api/department/${id}`, { headers })
+            const response = await axios.delete(`${API_BASE_URL}/api/department/${id}`, { headers })
             console.log('DELETE /api/department/:id response:', response)
 
             if (response.data && response.data.success) {

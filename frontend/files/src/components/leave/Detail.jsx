@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from '../../context/authContext';
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 
 const Detail = () => {
     const {id: paramId} = useParams();
@@ -28,7 +29,7 @@ const Detail = () => {
       }
 
       try {
-        const response = await axios.get(`http://localhost:5000/api/leave/detail/${id}`, {
+        const response = await axios.get(`${API_BASE_URL}/api/leave/detail/${id}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
               }
@@ -55,7 +56,7 @@ const Detail = () => {
 
   const changeStatus = async (id, status) => {
       try {
-        const response = await axios.put(`http://localhost:5000/api/leave/${id}`, { status },
+        const response = await axios.put(`${API_BASE_URL}/api/leave/${id}`, { status },
             {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -86,7 +87,7 @@ const Detail = () => {
 
     <div className="mb-6 flex justify-center">
       <img
-        src={leave?.employeeId?.userId?.profileImage ? `http://localhost:5000/uploads/${encodeURIComponent(leave.employeeId.userId.profileImage)}` : 'https://via.placeholder.com/150'}
+        src={leave?.employeeId?.userId?.profileImage ? `${API_BASE_URL}/uploads/${encodeURIComponent(leave.employeeId.userId.profileImage)}` : 'https://via.placeholder.com/150'}
         alt="Profile"
         className="w-32 h-32 rounded-full object-cover"
       />

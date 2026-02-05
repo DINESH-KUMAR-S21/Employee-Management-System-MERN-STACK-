@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 
  export const columns = [
@@ -41,7 +42,7 @@ import axios from 'axios';
 export const AttendanceHelper = ({status, employeeId, statusChange}) => {
     const markEmployee = async (status, employeeId) => {
         try {
-            const response = await axios.put(`http://localhost:5000/api/attendance/update/${employeeId}`, {status}, {
+            const response = await axios.put(`${API_BASE_URL}/api/attendance/update/${employeeId}`, {status}, {
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
                 }

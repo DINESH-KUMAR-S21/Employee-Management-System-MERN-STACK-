@@ -4,6 +4,7 @@ import SummaryCard from './SummaryCard'
 import { useAuth } from '../context/authContext'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import API_BASE_URL from '../config/api'
 
 const EmployeeSummary = () => {
   const { user } = useAuth()
@@ -16,7 +17,7 @@ const EmployeeSummary = () => {
 
     const fetchLeaves = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/leave/${user._id}`, {
+        const res = await axios.get(`${API_BASE_URL}/api/leave/${user._id}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         const leaves = Array.isArray(res.data?.leaves) ? res.data.leaves : []
@@ -29,7 +30,7 @@ const EmployeeSummary = () => {
 
     const fetchSalary = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/salary/${user._id}`, {
+        const res = await axios.get(`${API_BASE_URL}/api/salary/${user._id}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         const salaries = res.data?.salaries ?? res.data?.salary ?? []

@@ -4,6 +4,7 @@ import axios from 'axios'
 import {AttendanceHelper, columns} from '../../utils/AttendanceHelper'
 import DataTable from 'react-data-table-component'
 import { StyleSheetManager } from 'styled-components'
+import API_BASE_URL from '../../config/api'
 
 const forwardedFilter = (prop) => {
   const blocked = [
@@ -25,7 +26,7 @@ const Attendance = () => {
   const fetchAttendance = async () => {
           setLoading(true)
         try {
-          const response = await axios.get('http://localhost:5000/api/attendance', {
+          const response = await axios.get(`${API_BASE_URL}/api/attendance`, {
             headers: {
               "Authorization": `Bearer ${localStorage.getItem("token")}`
             }

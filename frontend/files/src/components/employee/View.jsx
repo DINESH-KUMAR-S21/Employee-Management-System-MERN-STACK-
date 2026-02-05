@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from '../../context/authContext';
+import API_BASE_URL from '../../config/api';
 
 const View = () => {
     const {id: paramId} = useParams();
@@ -26,7 +27,7 @@ const View = () => {
       }
 
       try {
-        const response = await axios.get(`http://localhost:5000/api/employee/${id}`, {
+        const response = await axios.get(`${API_BASE_URL}/api/employee/${id}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
               }
@@ -59,7 +60,7 @@ const View = () => {
 
     <div className="mb-6 flex justify-center">
       <img
-        src={employee?.userId?.profileImage ? `http://localhost:5000/uploads/${encodeURIComponent(employee.userId.profileImage)}` : 'https://via.placeholder.com/150'}
+        src={employee?.userId?.profileImage ? `${API_BASE_URL}/uploads/${encodeURIComponent(employee.userId.profileImage)}` : 'https://via.placeholder.com/150'}
         alt="Profile"
         className="w-32 h-32 rounded-full object-cover"
       />

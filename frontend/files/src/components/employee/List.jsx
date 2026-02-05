@@ -4,6 +4,7 @@ import axios from 'axios'
 import { EmployeeButtons, columns } from '../../utils/EmployeeHelper'
 import DataTable from 'react-data-table-component'
 import { StyleSheetManager } from 'styled-components'
+import API_BASE_URL from '../../config/api'
 
 const forwardedFilter = (prop) => {
   const blocked = [
@@ -22,7 +23,7 @@ const List = () => {
       const fetchEmployees = async () => {
           setEmpLoading(true)
         try {
-          const response = await axios.get('http://localhost:5000/api/employee', {
+          const response = await axios.get(`${API_BASE_URL}/api/employee`, {
             headers: {
               "Authorization": `Bearer ${localStorage.getItem("token")}`
             }
@@ -38,7 +39,7 @@ const List = () => {
               name: emp.userId.name, 
               dob: new Date(emp.dob).toLocaleDateString(),
               profileImage:<img
-  src={`http://localhost:5000/uploads/${emp.userId.profileImage}`}
+  src={`${API_BASE_URL}/uploads/${emp.userId.profileImage}`}
   alt="profile"
   className="w-10 h-10 rounded-full object-cover"
 />

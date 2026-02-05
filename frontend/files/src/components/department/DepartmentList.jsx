@@ -5,6 +5,7 @@ import { DepartmentButtons } from '../../utils/DepartmentHelper'
 import DataTable from 'react-data-table-component'
 import { columns } from '../../utils/DepartmentHelper'
 import { StyleSheetManager } from 'styled-components'
+import API_BASE_URL from '../../config/api'
 
 // Filter specific props so styled-components doesn't forward them to DOM elements
 const filterDataTableProps = (prop) => ![
@@ -42,7 +43,7 @@ const DepartmentList = () => {
     const fetchDepartments = async () => {
         setDepLoading(true)
       try {
-        const response = await axios.get('http://localhost:5000/api/department/list', {
+        const response = await axios.get(`${API_BASE_URL}/api/department/list`, {
           headers: {
             "Authorization": `Bearer ${localStorage.getItem("token")}`
           }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../context/authContext.jsx";
+import API_BASE_URL from "../config/api";
 
 
 const Login = () => {
@@ -14,7 +15,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try{
-      const response = await axios.post("http://localhost:5000/api/auth/login", {email, password})
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {email, password})
       console.log("Login response:", response.data)
       
       // Check if response has token and user (success indicators)

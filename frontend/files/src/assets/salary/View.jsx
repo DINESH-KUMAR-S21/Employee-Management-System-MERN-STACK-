@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
+import API_BASE_URL from '../../config/api'
 
 const View = () => {
   const [salaries, setSalaries] = useState([])
@@ -12,7 +13,7 @@ const View = () => {
   const fetchSalaries = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/salary/${id}`,
+        `${API_BASE_URL}/api/salary/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
