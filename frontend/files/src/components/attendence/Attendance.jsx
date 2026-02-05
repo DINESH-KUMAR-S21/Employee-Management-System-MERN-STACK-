@@ -15,9 +15,9 @@ const forwardedFilter = (prop) => {
 }
 
 const Attendance = () => {
-   const [attendance, setAttendance] = useState([])
+  const [attendance, setAttendance] = useState([])
   const [loading, setLoading] = useState(false)
-  const [filteredAttendance, setFilteredAttendance] = useState(null)
+  const [filteredAttendance, setFilteredAttendance] = useState([])
 
   const statusChange = () => {
     fetchAttendance()
@@ -35,16 +35,20 @@ const Attendance = () => {
           console.log(response.data)
           if (response.data && response.data.success) {
             let sno = 1
-            const data = response.data.attendance.map((att) => ({
-              employeeId: att.employeeId.employeeId,
-              sno: sno++,
-              department: att.employeeId.department.dep_name,
-              name: att.employeeId.userId.name, 
-              action: <AttendanceHelper status={att.status} employeeId={att.employeeId.employeeId} statusChange={statusChange} />
-            }))
+            const attendanceArray = Array.isArray(response.data.attendance) ? response.data.attendance : []
+            // keep only records that have a linked employee
+            const data = attendanceArray
+              .filter((att) => att && att.employeeId)
+              .map((att) => ({
+                employeeId: att.employeeId.employeeId,
+                sno: sno++,
+                department: att.employeeId?.department?.dep_name || 'N/A',
+                name: att.employeeId?.userId?.name || 'N/A',
+                action: <AttendanceHelper status={att.status} employeeId={att.employeeId.employeeId} statusChange={statusChange} />
+              }))
+
             setAttendance(data)
             setFilteredAttendance(data)
-         
           }
         } catch (error) {
           console.error('Failed to fetch departments:', error)
@@ -68,8 +72,8 @@ const Attendance = () => {
   setFilteredAttendance(records)
 }
 
-if(!filteredAttendance){
-    return <div>Loading...</div>
+if (loading) {
+  return <div>Loading...</div>
 }
 
 
