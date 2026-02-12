@@ -3,6 +3,9 @@ import User from '../../models/user.js'
 import bcrypt from 'bcryptjs'
 import fs from 'fs'
 import path from 'path'
+import Attendance from '../../models/Attendance.js'
+import Leave from '../../models/Leave.js'
+import Salary from '../../models/Salary.js'
 
 // Ensure uploads directory exists
 const uploadDir = path.join(process.cwd(), 'public', 'uploads')
@@ -244,4 +247,43 @@ const editEmployee = async (req, res) => {
     }
 }
 
-export { addEmployee, upload, getEmployees, getEmployee, editEmployee, getEmployeesByDepartment }
+const deleteEmployee = async (req, res) => {
+    const { id } = req.params
+    try {
+        const mongoose = await import('mongoose')
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ success: false, error: 'Invalid employee id' })
+        }
+
+        const employee = await Employee.findById(id)
+        if (!employee) return res.status(404).json({ success: false, error: 'Employee not found' })
+
+        // Remove associated attendance, leaves, and salaries
+        await Attendance.deleteMany({ employeeId: employee._id })
+        await Leave.deleteMany({ employeeId: employee._id })
+        await Salary.deleteMany({ employeeId: employee._id })
+
+        // Remove associated user and its profile image
+        const user = await User.findById(employee.userId)
+        if (user) {
+            if (user.profileImage) {
+                const filePath = path.join(uploadDir, user.profileImage)
+                try {
+                    if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
+                } catch (e) {
+                    console.warn('Failed to remove profile image:', e.message || e)
+                }
+            }
+            await User.findByIdAndDelete(user._id)
+        }
+
+        await Employee.findByIdAndDelete(employee._id)
+
+        return res.status(200).json({ success: true, message: 'Employee and related records deleted' })
+    } catch (error) {
+        console.error('Delete employee error:', error.message || error)
+        return res.status(500).json({ success: false, error: 'delete employee server error', message: error.message || String(error) })
+    }
+}
+
+export { addEmployee, upload, getEmployees, getEmployee, editEmployee, getEmployeesByDepartment, deleteEmployee }

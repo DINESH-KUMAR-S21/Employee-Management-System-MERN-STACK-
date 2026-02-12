@@ -85,6 +85,8 @@ const List = () => {
               className="px-4 py-1 border border-gray-300 rounded bg-gray-200 text-black placeholder-gray-600"
             //   onChange={filterDepartments}
             />
+             <Link to="/admin-dashboard/employees/delete-employee" className='ml-auto mr-3 px-4 py-1 bg-red-600 rounded text-white'>Delete Employee</Link>
+
             <Link to="/admin-dashboard/employees/add-employees" className='px-4 py-1 bg-teal-600 rounded text-white'>Add New Employee</Link>
           </div>
           <div>

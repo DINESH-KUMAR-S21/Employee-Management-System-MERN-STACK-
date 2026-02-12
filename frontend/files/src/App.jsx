@@ -24,6 +24,7 @@ import Detail from "./components/leave/Detail";
 import Unauthorized from "./pages/Unauthorized";
 import Attendance from "./components/attendence/Attendance";
 import AttendanceReport from "./components/attendence/AttendanceReport";
+import DeleteEmp from "./components/employee/deleteemp";
 
 function App() {
   return (
@@ -42,10 +43,12 @@ function App() {
           }>
             <Route index element={<AdminSummary />} />
             <Route path="departments" element={<DepartmentList />} />
+          
             <Route path="departments/add-new-department" element={<AddDepartment />} />
             <Route path="department/:id" element={<EditDepartment />} />
             <Route path="employees" element={<List />} />
             <Route path="employees/add-employees" element={<Add />} />
+              <Route path="employees/delete-employee" element={<DeleteEmp />} />
             <Route path="employees/:id" element={<View />} />
             <Route path="employee/edit/:id" element={<Edit />} />
             <Route path="employees/salary/:id" element={<ViewSalary />} />
