@@ -42,59 +42,62 @@ const attendanceReport = async (req, res) => {
             query.date = date;
         }
 
-        // Get total count for pagination
-        const totalRecords = await Attendance.countDocuments(query);
-        
         const attendanceData = await Attendance.find(query)
             .sort({date: -1, _id: -1})
             .skip(parseInt(skip))
             .limit(parseInt(limit))
-            .populate('employeeId')
-            .lean(); 
+            .populate({
+                path: 'employeeId',
+                populate: [
+                    { path: 'userId', select: 'name' },
+                    { path: 'department', select: 'dep_name' }
+                ]
+            });
 
-        // Manual population with error handling
-        const populatedData = await Promise.all(attendanceData.map(async (record) => {
-            try {
-                if (record.employeeId) {
-                    const employee = await Employee.findById(record.employeeId)
-                        .populate('userId')
-                        .populate('department')
-                        .lean();
-                    record.employeeId = employee;
-                }
-                return record;
-            } catch (err) {
-                console.error("Error populating record:", record._id, err.message);
-                return null;
-            }
-        }));
+        // Get total count for pagination
+        const totalRecords = await Attendance.countDocuments(query);
 
-        const groupData = populatedData.reduce((result, record) => {
-            if (!record) return result;
-            
+        // Group by date with fallback values for deleted employees
+        const groupData = {};
+        attendanceData.forEach(record => {
             try {
-                if(!result[record.date]){
-                    result[record.date] = [];
+                if (!groupData[record.date]) {
+                    groupData[record.date] = [];
                 }
-                // Check if employeeId and related fields exist before accessing
-                if(record.employeeId && record.employeeId.userId && record.employeeId.department){
-                    result[record.date].push({
-                        employeeId: record.employeeId.employeeId,
-                        employeeName: record.employeeId.userId.name,
-                        departmentName: record.employeeId.department.dep_name,
-                        status: record.status || "Not marked"
-                    });
-                }
+                
+                // Use fallback values if employee/user/department is deleted
+                groupData[record.date].push({
+                    employeeId: record.employeeId?.employeeId || "DELETED",
+                    employeeName: record.employeeId?.userId?.name || "Deleted Employee",
+                    departmentName: record.employeeId?.department?.dep_name || "N/A",
+                    status: record.status || "Not marked"
+                });
             } catch(recordError) {
                 console.error("Error processing record:", record._id, recordError.message);
+                // Still add record with fallback values even if error occurs
+                if (!groupData[record.date]) {
+                    groupData[record.date] = [];
+                }
+                groupData[record.date].push({
+                    employeeId: "DELETED",
+                    employeeName: "Deleted Employee",
+                    departmentName: "N/A",
+                    status: record.status || "Not marked"
+                });
             }
-            return result;
-        }, {});
+        });
         
-        return res.status(200).json({ success: true, groupData, totalRecords });
+        return res.status(200).json({ 
+            success: true, 
+            groupData, 
+            totalRecords
+        });
     }catch(error){
-        console.error("Attendance report error:", error.message, error.stack);
-        return res.status(500).json({ success: false, message: error.message });
+        console.error("Attendance report error:", error);
+        return res.status(500).json({ 
+            success: false, 
+            message: error.message || "Server error"
+        });
     }
 }
 export { getAttendance, updateAttendance, attendanceReport }
