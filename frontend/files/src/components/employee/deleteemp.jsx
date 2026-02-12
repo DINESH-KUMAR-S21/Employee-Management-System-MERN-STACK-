@@ -132,11 +132,13 @@ const DeleteEmp = () => {
               name="employee"
               onChange={(e) => setSelectedEmployee(e.target.value)}
               value={selectedEmployee}
-              disabled={loadingEmployees}
+              disabled={loadingEmployees || !employees || employees.length === 0}
               className="mt-1 w-full px-3 py-2 border rounded-md"
               required
             >
-              <option value="">{loadingEmployees ? 'Loading employees...' : 'Select Employee'}</option>
+              <option value="">
+                {loadingEmployees ? 'Loading employees...' : employees && employees.length > 0 ? 'Select Employee' : 'No employee found'}
+              </option>
               {!loadingEmployees && (employees || []).map((emp) => (
                 <option key={emp._id} value={emp._id}>
                   { (emp.userId && emp.userId.name) || emp.employeeId || emp._id }
