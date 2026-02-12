@@ -89,7 +89,7 @@ const AttendanceReport = () => {
 
                       <tbody>
                         {Array.isArray(records) ? records.map((data, i) => (
-                          <tr key={data.employeeId || i} className='odd:bg-white even:bg-gray-50'>
+                          <tr key={`${date}-${data.employeeId}-${i}`} className='odd:bg-white even:bg-gray-50'>
                             <td className='px-4 py-2 text-gray-700'>{i + 1}</td>
                             <td className='px-4 py-2 font-mono text-gray-700'>{data.employeeId}</td>
                             <td className='px-4 py-2 text-gray-700'>{data.employeeName}</td>
