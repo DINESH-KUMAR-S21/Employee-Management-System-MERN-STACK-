@@ -42,10 +42,9 @@ const attendanceReport = async (req, res) => {
             query.date = date;
         }
 
+        // Fetch ALL matching records (no skip/limit here - we'll paginate after grouping)
         const attendanceData = await Attendance.find(query)
             .sort({date: -1, _id: -1})
-            .skip(parseInt(skip))
-            .limit(parseInt(limit))
             .populate({
                 path: 'employeeId',
                 populate: [
@@ -54,19 +53,16 @@ const attendanceReport = async (req, res) => {
                 ]
             });
 
-        // Get total count for pagination
-        const totalRecords = await Attendance.countDocuments(query);
-
-        // Group by date with fallback values for deleted employees
-        const groupData = {};
+        // Group by date first with fallback values for deleted employees
+        const groupedData = {};
         attendanceData.forEach(record => {
             try {
-                if (!groupData[record.date]) {
-                    groupData[record.date] = [];
+                if (!groupedData[record.date]) {
+                    groupedData[record.date] = [];
                 }
                 
                 // Use fallback values if employee/user/department is deleted
-                groupData[record.date].push({
+                groupedData[record.date].push({
                     employeeId: record.employeeId?.employeeId || "DELETED",
                     employeeName: record.employeeId?.userId?.name || "Deleted Employee",
                     departmentName: record.employeeId?.department?.dep_name || "N/A",
@@ -75,10 +71,10 @@ const attendanceReport = async (req, res) => {
             } catch(recordError) {
                 console.error("Error processing record:", record._id, recordError.message);
                 // Still add record with fallback values even if error occurs
-                if (!groupData[record.date]) {
-                    groupData[record.date] = [];
+                if (!groupedData[record.date]) {
+                    groupedData[record.date] = [];
                 }
-                groupData[record.date].push({
+                groupedData[record.date].push({
                     employeeId: "DELETED",
                     employeeName: "Deleted Employee",
                     departmentName: "N/A",
@@ -86,7 +82,17 @@ const attendanceReport = async (req, res) => {
                 });
             }
         });
-        
+
+        // Get grouped dates array for pagination
+        const groupedDates = Object.entries(groupedData); // [[date, records], [date, records], ...]
+        const totalRecords = groupedDates.length; // Total number of date groups
+
+        // Apply pagination to grouped dates (not raw records)
+        const paginatedDates = groupedDates.slice(parseInt(skip), parseInt(skip) + parseInt(limit));
+
+        // Convert back to object format { [date]: records[] }
+        const groupData = Object.fromEntries(paginatedDates);
+
         return res.status(200).json({ 
             success: true, 
             groupData, 
